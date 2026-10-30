@@ -1,0 +1,84 @@
+# ============================================
+# PROYECTO: serial
+# ARCHIVO: serial.qsf
+# FPGA: DE10-Lite MAX 10
+# PRACTICA 4 - COMUNICACION UART
+# MATLAB <-> ESP32 <-> FPGA
+# ============================================
+
+# ============================================
+# 1. CONFIGURACION DEL DISPOSITIVO
+# ============================================
+
+set_global_assignment -name FAMILY "MAX 10"
+set_global_assignment -name DEVICE 10M50DAF484C7G
+
+# ============================================
+# 2. MODULO PRINCIPAL
+# ============================================
+
+set_global_assignment -name TOP_LEVEL_ENTITY top_uart_de10lite
+
+# ============================================
+# 3. ARCHIVOS VERILOG
+# ============================================
+
+set_global_assignment -name VERILOG_FILE top_uart_de10lite.v
+set_global_assignment -name VERILOG_FILE uart_rx.v
+set_global_assignment -name VERILOG_FILE uart_tx.v
+
+# ============================================
+# 4. RELOJ DE 50 MHz
+# CLOCK_50
+# ============================================
+
+set_location_assignment PIN_P11 -to CLOCK_50
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to CLOCK_50
+
+# ============================================
+# 5. RESET
+# BOTON KEY0 - ACTIVO EN BAJO
+# ============================================
+
+set_location_assignment PIN_B8 -to RESET_N
+set_instance_assignment -name IO_STANDARD "3.3 V SCHMITT TRIGGER" -to RESET_N
+
+# ============================================
+# 6. UART RX
+# FPGA RECIBE DATOS DEL ESP32
+# CONECTOR JP1 - PIN 1 (GPIO_0)
+# ============================================
+
+set_location_assignment PIN_V10 -to UART_RX
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to UART_RX
+
+# ============================================
+# 7. UART TX
+# FPGA ENVIA DATOS AL ESP32
+# CONECTOR JP1 - PIN 2 (GPIO_1)
+# ============================================
+
+set_location_assignment PIN_W10 -to UART_TX
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to UART_TX
+
+# ============================================
+# 8. CONFIGURACION DE PINES NO UTILIZADOS
+# ============================================
+
+set_global_assignment -name RESERVE_ALL_UNUSED_PINS "AS INPUT TRI-STATED"
+
+# ============================================
+# 9. CONFIGURACION GENERAL
+# ============================================
+
+set_global_assignment -name PROJECT_OUTPUT_DIRECTORY output_files
+
+# ============================================
+# FIN DEL ARCHIVO serial.qsf
+# ============================================
+set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
+set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
+set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
+set_global_assignment -name LAST_QUARTUS_VERSION "21.1.1 Lite Edition"
+set_global_assignment -name RESERVE_ALL_UNUSED_PINS_NO_OUTPUT_GND "AS INPUT TRI-STATED"
+set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
